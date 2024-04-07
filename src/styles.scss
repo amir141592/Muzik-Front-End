@@ -1,0 +1,54 @@
+@import 'tailwind.css';
+@import 'assets/icons/icon-sax.css';
+
+@font-face {
+  font-family: 'fira-sans';
+  src: url('./assets/fonts/FiraSans-Light.ttf');
+  font-weight: 300;
+}
+
+@font-face {
+  font-family: 'fira-sans';
+  src: url('./assets/fonts/FiraSans-Regular.ttf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'fira-sans';
+  src: url('./assets/fonts/FiraSans-Medium.ttf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'fira-sans';
+  src: url('./assets/fonts/FiraSans-SemiBold.ttf');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'fira-sans';
+  src: url('./assets/fonts/FiraSans-Bold.ttf');
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: 'fira-sans';
+  src: url('./assets/fonts/FiraSans-ExtraBold.ttf');
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: 'fira-sans';
+  src: url('./assets/fonts/FiraSans-Black.ttf');
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: 'signika';
+  src: url('./assets/fonts/SignikaNegative-VariableFont_wght.ttf');
+}
+
+* {
+  outline: none;
+  list-style: none;
+}

@@ -1,0 +1,85 @@
+<div class="w-44">
+  <!-- ? Song Cover -->
+  <div
+    class="group w-44 h-44 relative rounded-lg overflow-hidden mb-2 flex justify-center items-center"
+  >
+    <!-- ? Song Actions Overlay -->
+    <div
+      class="absolute w-full h-full flex justify-center items-center opacity-0 bg-slate-500/60 transition group-hover:opacity-100"
+    >
+      <!-- ? Play Song -->
+      <button
+        class="group/button flex justify-center items-center w-14 h-14 cursor-pointer transition border-2 border-orange-600 rounded-full hover:border-orange-700"
+        (click)="playSong()"
+      >
+        <i
+          class="isax isax-play5 !text-3xl text-orange-600 transition group-hover/button:text-orange-700"
+        ></i>
+      </button>
+      <menu class="absolute top-1 right-2 flex flex-col items-center gap-2">
+        <!-- ? Add Song to Playlist -->
+        <li>
+          <button class="cursor-pointer" (click)="addSongToList()">
+            <i
+              class="isax isax-music-filter !text-xl text-sky-400 transition hover:text-sky-500"
+            ></i>
+          </button>
+        </li>
+        <!-- ? Favorite Song -->
+        <li>
+          <button class="cursor-pointer" (click)="emitToggleFavorite()">
+            <i
+              class="isax !text-xl text-yellow-400 transition hover:text-yellow-500"
+              [class]="song().favorite ? 'isax-star-15' : 'isax-star'"
+            ></i>
+          </button>
+        </li>
+      </menu>
+    </div>
+    @if (song().parentalAdvisory) {
+    <!-- ? Song PA Mark -->
+    <span class="absolute top-2 left-2 p-1 bg-orange-600/50 rounded">
+      <p
+        class="border rounded text-xs p-1 text-white"
+        title="Parental Advisory"
+      >
+        PA
+      </p>
+    </span>
+    } @if (song().image) {
+    <!-- ? Song Image -->
+    <img class="w-full h-auto" [src]="song().image" [alt]="song().title" /> }
+    @else {
+    <!-- ? Song Icon -->
+    <i class="isax isax-audio-square !text-4xl"></i> }
+  </div>
+  <!-- ? Song Title -->
+  <h1
+    class="font-signika w-full truncate font-medium text-slate-800 capitalize"
+    [title]="song().title"
+    (click)="playSong()"
+  >
+    {{ song().title }}
+  </h1>
+  <!-- ? Song Artists -->
+  <h2
+    class="font-signika w-full truncate text-sm text-slate-500 capitalize"
+    [title]="
+      song().artist +
+        (song().coArtists.length
+          ? ' ' + '(ft. ' + song().coArtists.join(', ') + ' )'
+          : '') | titlecase
+    "
+  >
+    <!-- ? Main Artist -->
+    <span class="cursor-pointer hover:underline">{{ song().artist }}</span>
+    @if (song().coArtists.length) {
+    <!-- ? Co-Artists -->
+    <span>
+      ( ft. @for (coArtist of song().coArtists; track $index) {
+      <span class="cursor-pointer hover:underline">{{ coArtist }}</span> @if
+      ($index < song().coArtists.length - 1) { <span>, </span> } } )
+    </span>
+    }
+  </h2>
+</div>

@@ -1,0 +1,218 @@
+<div class="w-full h-screen flex bg-slate-50">
+  <!-- ? Left Section -->
+  <div
+    class="w-64 h-screen flex-none p-4 border-r border-slate-300 [&>ul]:mb-6 relative"
+  >
+    <!-- ? Logo -->
+    <h1 class="mb-12 font-fira-sans font-semibold text-3xl text-orange-600">
+      MUZIK
+    </h1>
+    <!-- ? Main Pages -->
+    <ul
+      class="*:flex *:items-center *:py-2 *:ml-4 *:font-signika *:cursor-pointer *:text-slate-700 *:transition [&>li>span]:transition [&>li>span]:mr-2 [&>li>span]:text-slate-700"
+    >
+      <li class="hover:text-orange-600 group">
+        <i class="isax isax-home-2 mr-2"></i>
+        Home
+      </li>
+      <li class="hover:text-orange-600 group">
+        <i class="isax isax-route-square mr-2"></i>
+        Explore
+      </li>
+      <li class="hover:text-orange-600 group">
+        <i class="isax isax-microphone-2 mr-2"></i>
+        Podcast
+      </li>
+    </ul>
+    <!-- ? User Song Libraries -->
+    <h2 class="mb-2 text-slate-600">My Library</h2>
+    <ul
+      class="*:flex *:items-center *:py-2 *:ml-4 *:font-signika *:cursor-pointer *:text-slate-700 *:transition [&>li>span]:transition [&>li>span]:mr-2 [&>li>span]:text-slate-700"
+    >
+      <li class="hover:text-orange-600 group">
+        <i class="isax isax-play-circle mr-2"></i>
+        Recently Played
+      </li>
+      <li class="hover:text-orange-600 group">
+        <i class="isax isax-star mr-2"></i>
+        Favorite Songs
+      </li>
+    </ul>
+    <!-- ? User Playlists -->
+    <h2 class="mb-2 text-slate-600">Playlists</h2>
+    <ul
+      class="*:flex *:items-center *:py-2 *:ml-4 *:font-signika *:cursor-pointer *:text-slate-700 *:transition [&>li>span]:transition [&>li>span]:mr-2 [&>li>span]:text-slate-700"
+    >
+      <li class="hover:text-orange-600 group">
+        <i class="isax isax-music-playlist mr-2"></i>
+        Hip Hop
+      </li>
+      <li class="hover:text-orange-600 group">
+        <i class="isax isax-music-playlist mr-2"></i>
+        Classic
+      </li>
+      <li class="hover:text-orange-600 group">
+        <i class="isax isax-music-playlist mr-2"></i>
+        Study
+      </li>
+      <li class="hover:text-orange-600 group">
+        <i class="isax isax-music-playlist mr-2"></i>
+        Chill
+      </li>
+    </ul>
+    <!-- ? User Mini Profile -->
+    <div
+      class="w-5/6 flex items-center absolute bottom-0 rounded-full p-2 mb-2 cursor-pointer bg-slate-100 group"
+    >
+      <!-- ? User Photo -->
+      <div
+        class="w-8 h-8 flex justify-center items-center rounded-full overflow-hidden mr-2"
+      >
+        <!-- <img src="" alt="" /> -->
+        <i class="isax isax-profile-circle"></i>
+      </div>
+      <!-- ? User Name -->
+      <p class="font-signika group-hover:text-orange-600 transition">
+        Amir Allahdadian
+      </p>
+      <i
+        class="isax isax-arrow-right-3 absolute right-0 mr-2 group-hover:text-orange-600 transition"
+      ></i>
+    </div>
+  </div>
+  <!-- ? Middle Section -->
+  <div class="flex-1 overflow-y-auto overflow-x-hidden relative">
+    <!-- ? Main Content -->
+    <div class="p-4">
+      <muzik-header></muzik-header>
+      <muzik-event-slider [events]="sliderEvents"></muzik-event-slider>
+      <muzik-song-slider
+        [title]="'New Releases'"
+        [songs]="recentlyPlayedSongs()"
+        (toggleFavorite)="toggleFavorite($event)"
+      ></muzik-song-slider>
+      <muzik-song-slider
+        [title]="'Recommended For You'"
+        [songs]="homeTopTracksSongs()"
+        (toggleFavorite)="toggleFavorite($event)"
+      ></muzik-song-slider>
+    </div>
+    <!-- ? Player -->
+    <div class="sticky bottom-0 w-full z-10">
+      @if (muzikService.playingSong()) {
+      <muzik-player></muzik-player>
+      }
+    </div>
+  </div>
+  <!-- ? Right Section -->
+  <div
+    class="w-96 flex-none flex flex-col h-screen p-4 border-l border-slate-300"
+  >
+    <!-- TODO make a list component -->
+    <!-- ? Playlist -->
+    <div
+      class="w-full overflow-y-auto mb-8"
+      style="max-height: calc(50% - 16px)"
+    >
+      <!-- ? Header -->
+      <div class="flex items-center w-full mb-6">
+        <i class="isax isax-music-filter mr-2 text-slate-500"></i>
+        <h1 class="text-slate-500 font-fira-sans">Playlist</h1>
+      </div>
+      <!-- ? List -->
+      <ul class="w-full">
+        @if (muzikService.playList().length) {@for (song of
+        muzikService.playList(); track 'id') {
+        <muzik-song-item [song]="song">
+          <div class="flex gap-2">
+            <button
+              class="text-orange-600 cursor-pointer font-medium transition hover:text-orange-700"
+              [title]="
+                muzikService.playingSong()?._id == song._id &&
+                muzikService.PLAYING_SONG_STATE() == 'PLAYING'
+                  ? 'pause'
+                  : 'play'
+              "
+            >
+              <i
+                class="isax"
+                [class]="
+                  muzikService.playingSong()?._id == song._id &&
+                  muzikService.PLAYING_SONG_STATE() == 'PLAYING'
+                    ? 'isax-pause5'
+                    : 'isax-play5'
+                "
+                (click)="playOrPause(song)"
+              ></i>
+            </button>
+            <button
+              class="text-red-600 cursor-pointer font-medium transition hover:text-red-700"
+              title="remove from playlist"
+              (click)="removeSongFromList(song)"
+            >
+              <i class="isax isax-close-circle5"></i>
+            </button>
+          </div>
+        </muzik-song-item>
+        }} @else {
+        <h2 class="text-center text-slate-500">
+          Click <i class="isax isax-music-filter5 !text-base mx-1"></i> on a
+          song to add it to playlist
+        </h2>
+        }
+      </ul>
+    </div>
+    <!-- TODO make a list component -->
+    <!-- ? Favorite Songs -->
+    <div class="w-full overflow-y-auto" style="max-height: calc(50% - 16px)">
+      <!-- ? Header -->
+      <div class="flex justify-between items-center w-full mb-6">
+        <div class="flex items-center">
+          <i class="isax isax-star mr-2 text-slate-500"></i>
+          <h1 class="text-slate-500 font-fira-sans">Favorite Songs</h1>
+        </div>
+        <button
+          class="text-orange-600 cursor-pointer font-medium transition hover:text-orange-700"
+        >
+          See All
+        </button>
+      </div>
+      <!-- ? List -->
+      <ul class="w-full">
+        @for (song of muzikService.favoriteSongs(); track 'id') {
+        <muzik-song-item [song]="song">
+          <div class="flex gap-2">
+            <button
+              class="text-orange-600 cursor-pointer font-medium transition hover:text-orange-700"
+              [title]="
+                muzikService.playingSong()?._id == song._id &&
+                muzikService.PLAYING_SONG_STATE() == 'PLAYING'
+                  ? 'pause'
+                  : 'play'
+              "
+            >
+              <i
+                class="isax"
+                [class]="
+                  muzikService.playingSong()?._id == song._id &&
+                  muzikService.PLAYING_SONG_STATE() == 'PLAYING'
+                    ? 'isax-pause5'
+                    : 'isax-play5'
+                "
+                (click)="playOrPause(song)"
+              ></i>
+            </button>
+            <button
+              class="text-sky-600 cursor-pointer font-medium transition hover:text-sky-700"
+              title="add to playlist"
+              (click)="addSongToList(song)"
+            >
+              <i class="isax isax-music-filter5"></i>
+            </button>
+          </div>
+        </muzik-song-item>
+        }
+      </ul>
+    </div>
+  </div>
+</div>

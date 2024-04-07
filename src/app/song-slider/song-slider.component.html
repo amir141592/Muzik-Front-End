@@ -1,0 +1,24 @@
+<div class="w-full bg-transparent mb-4">
+  <!-- ? Header -->
+  <div class="w-full flex justify-between items-center mb-4">
+    <!-- ? Title -->
+    <h2 class="font-fira-sans text-xl font-medium capitalize">{{ title() }}</h2>
+    <!-- ? CTA Button -->
+    <button
+      class="text-orange-600 cursor-pointer font-medium transition hover:text-orange-700"
+    >
+      See More
+    </button>
+  </div>
+  <!-- ? Song List -->
+  <div class="flex items-center gap-10 overflow-x-auto">
+    @for (song of songs(); track song._id) {
+    <muzik-song-card
+      [song]="song"
+      (toggleFavorite)="emitToggleFavorite($event)"
+    ></muzik-song-card>
+    } @empty {
+    <p>No song is available!</p>
+    }
+  </div>
+</div>

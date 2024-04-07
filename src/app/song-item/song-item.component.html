@@ -1,0 +1,52 @@
+<li class="flex justify-between items-center mb-4 w-full">
+  <div class="flex">
+    <!-- ? Song Image/Icon -->
+    <div class="w-16 h-16 rounded-lg overflow-hidden mr-2">
+      @if (song().image) {
+      <img class="w-full h-auto" [src]="song().image" [alt]="song().title" />
+      } @else { <i class="isax isax-audio-square"></i> }
+    </div>
+    <!-- ? Song Info -->
+    <div class="flex flex-col justify-center">
+      <!-- ? Song Title -->
+      <h1
+        class="font-signika font-medium w-full truncate capitalize text-slate-800"
+        [title]="song().title"
+        [class]="
+          song()._id == muzikService.playingSong()?._id
+            ? '!text-orange-600'
+            : ''
+        "
+      >
+        {{ song().title }}
+      </h1>
+      <!-- ? Song Artists -->
+      <h2
+        class="font-signika w-full truncate capitalize text-sm text-slate-500"
+        [title]="
+          song().artist +
+            (song().coArtists.length
+              ? ' ' + '(ft. ' + song().coArtists.join(', ') + ' )'
+              : '') | titlecase
+        "
+        [class]="
+          song()._id == muzikService.playingSong()?._id
+            ? '!text-orange-600'
+            : ''
+        "
+      >
+        <!-- ? Main Artist -->
+        <span class="cursor-pointer hover:underline">{{ song().artist }}</span>
+        @if (song().coArtists.length) {
+        <!-- ? Co-Artists -->
+        <span>
+          ( ft. @for (coArtist of song().coArtists; track $index) {
+          <span class="cursor-pointer hover:underline">{{ coArtist }}</span> @if
+          ($index < song().coArtists.length - 1) { <span>, </span> } } )
+        </span>
+        }
+      </h2>
+    </div>
+  </div>
+  <ng-content></ng-content>
+</li>

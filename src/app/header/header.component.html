@@ -1,0 +1,28 @@
+<div class="flex justify-between items-center mb-4">
+  <!-- ? Search Input Container -->
+  <div
+    class="group w-1/2 h-10 flex items-center rounded-full py-2 px-4 bg-slate-100"
+  >
+    <i class="isax isax-search-normal-1 text-slate-400 cursor-pointer"></i>
+    <input
+      type="search"
+      name="search"
+      id="search"
+      class="bg-transparent mx-1 w-full"
+      placeholder="search"
+      [formControl]="search"
+    />
+    <i
+      class="isax isax-eraser-1 invisible text-slate-400 cursor-pointer group-hover:visible"
+    ></i>
+  </div>
+  <!-- ? Notifications Menu Button -->
+  <div
+    class="group w-10 h-10 flex p-2 justify-center items-center border rounded-full border-slate-300 cursor-pointer transition hover:border-orange-600"
+  >
+    <i
+      class="isax isax-notification text-slate-600 transition group-hover:text-orange-600"
+    ></i>
+    <!-- TODO add notifications menu -->
+  </div>
+</div>

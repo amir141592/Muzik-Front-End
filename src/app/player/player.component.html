@@ -1,0 +1,183 @@
+<div class="w-full bg-slate-50 relative flex justify-between p-4 pt-8">
+  <!-- ? Audio Element -->
+  <audio
+    #AUDIO_PLAYER
+    id="audio-player"
+    class="invisible"
+    [src]="muzikService.playingSong()?.file"
+    (loadstart)="loadingSong()"
+    (loadeddata)="loadedSong()"
+    (ended)="endedSong()"
+  ></audio>
+  <!-- ? Audio Seeker -->
+  <input
+    #SEEKER
+    type="range"
+    name="seeker"
+    id="seeker"
+    class="absolute top-0 w-full cursor-col-resize"
+    style="transform: translate(-16px, -4px); accent-color: rgb(234 88 12)"
+    value="0"
+    step="0.01"
+    title="change current time of song"
+    (input)="seek()"
+  />
+  <!-- ? Audio Current Time -->
+  <span class="absolute top-2 left-2 text-slate-500 text-xs">{{
+    muzikService.audioCurrentTime() | time
+  }}</span>
+  <!-- ? Audio Duration -->
+  <span class="absolute top-2 right-2 text-slate-500 text-xs">{{
+    muzikService.audioDuration() | time
+  }}</span>
+  <!-- ? Song Info -->
+  <div class="flex">
+    <!-- ? Song Image -->
+    <div class="w-16 h-16 rounded-lg overflow-hidden mr-2">
+      @if (muzikService.playingSong()?.image) {
+      <img
+        class="w-full h-auto"
+        [src]="muzikService.playingSong()?.image"
+        [alt]="muzikService.playingSong()?.title"
+      />
+      } @else { <i class="isax isax-audio-square"></i> }
+    </div>
+    <div class="flex flex-col justify-center">
+      <!-- ? Song Name -->
+      <h1 class="font-signika font-medium capitalize text-slate-800">
+        {{ muzikService.playingSong()?.title }}
+      </h1>
+      <!-- ? Song Artists -->
+      <h2
+        class="font-signika w-full truncate text-sm text-slate-500 capitalize"
+        [title]="
+          muzikService.playingSong()?.artist +
+            (muzikService.playingSong()?.coArtists?.length
+              ? ' ' +
+                '(ft. ' +
+                muzikService.playingSong()?.coArtists?.join(', ') +
+                ' )'
+              : '') | titlecase
+        "
+      >
+        <!-- ? Main Artist -->
+        <span class="cursor-pointer hover:underline">{{
+          muzikService.playingSong()?.artist
+        }}</span>
+        @if (muzikService.playingSong()?.coArtists?.length) {
+        <!-- ? Co-Artists -->
+        <span>
+          (ft. @for (coArtist of muzikService.playingSong()?.coArtists; track
+          $index) {
+          <span class="cursor-pointer hover:underline">{{ coArtist }}</span> @if
+          ($index < (muzikService.playingSong()?.coArtists?.length ?? 0) - 1) {
+          <span>, </span> } } )
+        </span>
+        }
+      </h2>
+    </div>
+  </div>
+  <!-- ? Audio Controls -->
+  <div
+    class="flex justify-between items-center gap-4 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+  >
+    <!-- ? Favorite -->
+    <button
+      [title]="muzikService.playingSong()?.favorite ? 'unfavorite' : 'favorite'"
+      (click)="toggleFavorite()"
+    >
+      <i
+        class="isax transition hover:text-yellow-500"
+        [class]="
+          muzikService.playingSong()?.favorite
+            ? 'isax-star-15 text-yellow-500 hover:!text-yellow-600'
+            : 'isax-star'
+        "
+      ></i>
+    </button>
+    <!-- ? Previous -->
+    <button title="play previous song" (click)="previous()">
+      <i class="isax isax-previous transition hover:text-orange-600"></i>
+    </button>
+    <!-- ? Play/Pause -->
+    <button
+      class="w-9 h-9 flex justify-center items-center transition rounded-full bg-orange-600 text-slate-50 hover:bg-orange-700"
+      [class.animation-rotate]="muzikService.PLAYING_SONG_STATE() == 'LOADING'"
+      [title]="
+        muzikService.PLAYING_SONG_STATE() == 'PLAYING'
+          ? 'pause song'
+          : muzikService.PLAYING_SONG_STATE() == 'PAUSED'
+          ? 'play song'
+          : 'loading song'
+      "
+      (click)="togglePlay()"
+    >
+      <i
+        class="isax"
+        [class]="
+          muzikService.PLAYING_SONG_STATE() == 'PLAYING'
+            ? 'isax-pause5'
+            : muzikService.PLAYING_SONG_STATE() == 'PAUSED'
+            ? 'isax-play5'
+            : 'isax-timer5'
+        "
+      ></i>
+    </button>
+    <!-- ? Next -->
+    <button title="play next song" (click)="next()">
+      <i class="isax isax-next transition hover:text-orange-600"></i>
+    </button>
+    <!-- ? Repeat -->
+    <button
+      [title]="
+        muzikService.REPEATE_STATE() == 'NO_LOOP'
+          ? 'no loop'
+          : muzikService.REPEATE_STATE() == 'LOOP_ALL'
+          ? 'loop all playlist'
+          : 'loop playing song'
+      "
+      (click)="changeRepeat()"
+    >
+      <i
+        class="isax transition hover:text-orange-600"
+        [class]="
+          muzikService.REPEATE_STATE() == 'NO_LOOP'
+            ? 'isax-arrow-right-1'
+            : muzikService.REPEATE_STATE() == 'LOOP_ALL'
+            ? 'isax-repeate-music text-orange-600 hover:!text-orange-700'
+            : 'isax-repeate-one text-orange-600 hover:!text-orange-700'
+        "
+      ></i>
+    </button>
+  </div>
+  <!-- ? Audio Volume Control -->
+  <div class="flex items-center">
+    <!-- ? Mute/Unmute -->
+    <i
+      class="isax mr-1 transition cursor-pointer hover:text-orange-600"
+      [class]="
+        muzikService.VOLUBLE()
+          ? muzikService.volume() > 0.5
+            ? 'isax-volume-high'
+            : 'isax-volume-low'
+          : 'isax-volume-slash'
+      "
+      [title]="muzikService.VOLUBLE() ? 'mute' : 'unmute'"
+      (click)="toggleVolume()"
+    ></i>
+    <!-- ? Change Volume -->
+    <input
+      #VOLUME
+      type="range"
+      name="volume"
+      id="volume"
+      class="w-20 h-1 cursor-col-resize"
+      style="accent-color: rgb(234 88 12)"
+      value="1"
+      max="1"
+      step="0.01"
+      title="change volume"
+      (input)="changeVolume()"
+    />
+  </div>
+</div>
